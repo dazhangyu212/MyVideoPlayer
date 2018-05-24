@@ -198,6 +198,7 @@ public class AudioRecorder {
         new Thread(new Runnable() {
             @Override
             public void run() {
+//                if (PcmToWav)
             }
         }).start();
     }
