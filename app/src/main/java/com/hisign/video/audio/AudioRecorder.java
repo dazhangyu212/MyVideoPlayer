@@ -189,4 +189,17 @@ public class AudioRecorder {
             }
         }
     }
+
+    /**
+     * 将pcm合并成wav
+     * @param filePaths 音频流的监听
+     */
+    private void mergePCMFilesToWAVFile(List<String> filePaths){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+            }
+        }).start();
+    }
 }
+
