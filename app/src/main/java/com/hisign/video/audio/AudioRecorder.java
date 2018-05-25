@@ -1,20 +1,33 @@
 package com.hisign.video.audio;
 
+import android.content.pm.PackageManager;
 import android.media.AudioFormat;
+import android.media.AudioManager;
 import android.media.AudioRecord;
+import android.media.AudioTrack;
 import android.media.MediaRecorder;
+import android.os.AsyncTask;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.hisign.video.app.CrashApplication;
+
+import java.io.BufferedInputStream;
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.Manifest.permission.RECORD_AUDIO;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
 /**
- * 描述：
+ * 描述：录音和Wav文件合成,再添加播放功能
  * 公司：北京海鑫科金高科技股份有限公司
  * 作者：zhangyu
  * 创建时间 2018/5/23
@@ -28,7 +41,6 @@ public class AudioRecorder {
     public static final String TAG = "AudioRecorder";
     private AudioRecord audioRecord = null;
 
-    private int recordBufSize = 0;
     /**
      * 音频输入-麦克风
      */
@@ -38,7 +50,7 @@ public class AudioRecorder {
      * 44100是目前的标准,但是某些设备仍然支持22050,16000,11025
      * 采样频率一般共分为22.05KHz,44.1KHz,48KHz
      */
-    private final static int AUDIO_SAMPLE_RATE = 16000;
+    private final static int AUDIO_SAMPLE_RATE = 44100;
     /**
      * 声道 单声道
      */
@@ -65,9 +77,6 @@ public class AudioRecorder {
      */
     private List<String> filesName = new ArrayList<>();
 
-
-
-
     private static AudioRecorder mAudioRecorder = null;
     private AudioRecorder(){}
     public static AudioRecorder getInstance(){
@@ -84,9 +93,11 @@ public class AudioRecorder {
      * 创建默认的录音对象
      * @param name 文件名
      */
-    private void createDefaultAudio(String name){
-        recordBufSize = AudioRecord.getMinBufferSize(AUDIO_SAMPLE_RATE,AUDIO_CHANNEL,AUDIO_ENCODING);
-        audioRecord = new AudioRecord(AUDIO_INPUT,AUDIO_SAMPLE_RATE,AUDIO_CHANNEL,AUDIO_ENCODING,bufferSizeInBytes);
+    public void createDefaultAudio(String name){
+        bufferSizeInBytes = AudioRecord.getMinBufferSize(AUDIO_SAMPLE_RATE,AUDIO_CHANNEL,
+                AUDIO_ENCODING);
+        audioRecord = new AudioRecord(AUDIO_INPUT,AUDIO_SAMPLE_RATE,
+                AUDIO_CHANNEL,AUDIO_ENCODING,bufferSizeInBytes);
         this.filename = name;
         status = Status.STATUS_READY;
 
@@ -149,14 +160,14 @@ public class AudioRecorder {
         byte[] audioData = new byte[bufferSizeInBytes];
         FileOutputStream fos = null;
         int readSize = 0;
-        String  currentFileName = filename;
+        StringBuilder  currentFileName = new StringBuilder(filename);
         if (status == Status.STATUS_PAUSE){
             //假如暂停录音,在文件名之后加数,放置重名文件内容被覆盖
-            currentFileName += filesName.size();
+            currentFileName.append("_").append(filesName.size());
         }
-        filesName.add(currentFileName);
+        filesName.add(currentFileName.toString());
         try {
-            File file = new File(FileUtils.getPcmFileAbsolutePath(currentFileName));
+            File file = new File(FileUtils.getPcmFileAbsolutePath(currentFileName.toString()));
             if (file.exists()){
                 file.delete();
             }
@@ -173,9 +184,14 @@ public class AudioRecorder {
         status = Status.STATUS_START;
         while (status == Status.STATUS_START){
             readSize = audioRecord.read(audioData,0,bufferSizeInBytes);
+            Log.i(TAG,"audio is writing,readSize = "+readSize);
             if (AudioRecord.ERROR_INVALID_OPERATION != readSize && fos != null){
+                Log.i(TAG,"audio is writing");
                 try {
                     fos.write(audioData);
+                    if (listener != null){
+                        listener.recordOfByte(audioData,0,audioData.length);
+                    }
                 } catch (IOException e) {
                     Log.e(TAG,e.getMessage());
                 }
@@ -194,13 +210,181 @@ public class AudioRecorder {
      * 将pcm合并成wav
      * @param filePaths 音频流的监听
      */
-    private void mergePCMFilesToWAVFile(List<String> filePaths){
+    private void mergePCMFilesToWAVFile(final List<String> filePaths){
         new Thread(new Runnable() {
             @Override
             public void run() {
-//                if (PcmToWav)
+                if (PcmToWav.mergePCMFilesToWAVFile(filePaths,FileUtils.getWavFileAbsolutePath(filename))){
+                    Log.d(TAG,"操作成功");
+                }else {
+                    Log.e(TAG,"PCM合成WAV失败");
+                    throw new IllegalStateException("fail to mergePCMFilesToWAVFile ");
+                }
+                filename = null;
             }
         }).start();
     }
+
+    private void makePCMFileToWAVFile(){
+        new  Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (PcmToWav.makePCMFileToWAVFile(FileUtils.getPcmFileAbsolutePath(filename)
+                ,FileUtils.getWavFileAbsolutePath(filename),true)){
+                    Log.d(TAG,"操作成功");
+                }else {
+                    Log.e(TAG,"PCM合成WAV失败");
+                    throw new IllegalStateException("fail to mergePCMFilesToWAVFile ");
+                }
+                filename = null;
+            }
+        }).start();
+    }
+
+    /**
+     * 获取录音状态
+     * @return
+     */
+    public Status getStatus() {
+        return status;
+    }
+
+    /**
+     * 获取本次录音的文件个数
+     * @return
+     */
+    public int getPcmFilesCount(){
+        return filesName.size();
+    }
+
+    /**
+     * 暂停录音
+     */
+    public void pauseRecord(){
+        Log.d(TAG,"=== pause recordd ===");
+        if (status != Status.STATUS_START){
+         throw new IllegalStateException("没有再录音");
+        }else {
+            audioRecord.stop();
+            status = Status.STATUS_PAUSE;
+        }
+    }
+
+    public void stopRecord(){
+        Log.d(TAG,"=== stop record===");
+        if (status == Status.STATUS_NOT_READY || status == Status.STATUS_READY){
+            throw new IllegalStateException("录音尚未开始");
+        }else {
+            audioRecord.stop();
+            status = Status.STATUS_STOP;
+            release();
+        }
+    }
+
+    /**
+     * 释放资源
+     */
+    private void release() {
+        Log.d(TAG,"=== release===");
+        if(filesName.size() > 0){
+            List<String> filesPath = new ArrayList<>();
+            for (String fileName:filesName){
+                filesPath.add(FileUtils.getPcmFileAbsolutePath(fileName));
+            }
+            //清除
+            filesName.clear();
+            //将多个pcm文件转化为wav文件
+            mergePCMFilesToWAVFile(filesPath);
+        }else {
+            //这里由于只要录音过filesName.size都会大于0,没录音时fileName为null
+            //会报空指针 NullPointerException
+            // 将单个pcm文件转化为wav文件
+            //Log.d("AudioRecorder", "=====makePCMFileToWAVFile======");
+            //makePCMFileToWAVFile();
+        }
+        if (audioRecord != null){
+            audioRecord.release();
+            audioRecord = null;
+        }
+        status = Status.STATUS_NOT_READY;
+    }
+
+    /**
+     * 取消录音
+     */
+    public void cancel(){
+        filesName.clear();
+        filename = null;
+        if (audioRecord != null){
+            audioRecord.release();
+            audioRecord = null;
+        }
+        status = Status.STATUS_NOT_READY;
+    }
+
+    //--------------------------------------------播放
+
+    /**
+     * 检测必要的权限
+     * @return
+     */
+    private boolean checkPermission() {
+        int result = ContextCompat.checkSelfPermission(CrashApplication.getInstance().getApplicationContext(),
+                WRITE_EXTERNAL_STORAGE);
+        int result1 = ContextCompat.checkSelfPermission(CrashApplication.getInstance().getApplicationContext(),
+                RECORD_AUDIO);
+        return result == PackageManager.PERMISSION_GRANTED &&
+                result1 == PackageManager.PERMISSION_GRANTED;
+    }
+
+    public void playPcm(){
+        PlayTask playTask = new PlayTask();
+        playTask.execute();
+
+    }
+
+    boolean mAudioPlaying;
+    class PlayTask extends AsyncTask<Void,Void,Void>{
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            if (filesName == null ||filesName.size()==0){
+                return null;
+            }
+            mAudioPlaying = true;
+            int bufferSize = AudioTrack.getMinBufferSize(AUDIO_SAMPLE_RATE,
+                    AudioFormat.CHANNEL_IN_STEREO,AudioFormat.ENCODING_PCM_16BIT);
+            short[] buffer = new short[bufferSize];
+            DataInputStream dis = null;
+            AudioTrack audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC,AUDIO_SAMPLE_RATE,
+                    AudioFormat.CHANNEL_IN_STEREO,AudioFormat.ENCODING_PCM_16BIT,
+                    bufferSize,AudioTrack.MODE_STREAM);
+            try {
+                dis = new DataInputStream(new BufferedInputStream(new FileInputStream(FileUtils.AUDIO_PCM_BASEPATH+filesName.get(0)+".pcm")));
+                audioTrack.play();//开始播放
+                //由于AudioTrack播放的是流,所以,我们需要一边播放一边读取
+                while(mAudioPlaying && dis.available() > 0){
+                    int i = 0;
+                    while (dis.available()>0 && i<buffer.length){
+                        buffer[i] = dis.readByte();
+                        i++;
+                    }
+                    // 然后将数据写入到AudioTrack中
+                    audioTrack.write(buffer,0,buffer.length);
+                }
+                //停止播放
+                audioTrack.stop();
+                dis.close();
+            } catch (FileNotFoundException e) {
+                Log.i(TAG,"error:"+e.getMessage());
+                e.printStackTrace();
+            } catch (IOException e) {
+                Log.i(TAG,"error:"+e.getMessage());
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
 }
 

@@ -23,6 +23,10 @@ public class CrashApplication extends Application {
         init();
     }
 
+    public static CrashApplication getInstance(){
+        return crashApplication;
+    }
+
     private void init() {
         initDirs();
         CrashHandler crashHandlerBiz = CrashHandler.getInstance();

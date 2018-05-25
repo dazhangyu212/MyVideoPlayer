@@ -1,5 +1,7 @@
 package com.hisign.video.audio;
 
+import android.util.Log;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
@@ -40,6 +42,7 @@ public class WaveHeader {
         writeShort(baos,bitsPerSample);
         writeChar(baos,dataHdrID);
         writeInt(baos,dataHdrLength);
+        Log.i("WAVEHEADER","header:"+baos.toString());
         baos.flush();
         byte[] buf = baos.toByteArray();
         baos.close();

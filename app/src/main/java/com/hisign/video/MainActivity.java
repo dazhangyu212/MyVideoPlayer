@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
+import com.hisign.video.audio.AudioActivity;
+import com.hisign.video.audio.AudioTestActivity;
 import com.hisign.video.drawimage.CustomViewActivity;
 import com.hisign.video.drawimage.ImageViewActivity;
 import com.hisign.video.drawimage.SurfaceViewActivity;
@@ -32,6 +34,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.btn_imageview_activity).setOnClickListener(this);
         findViewById(R.id.btn_surfaceview_activity).setOnClickListener(this);
         findViewById(R.id.btn_custom_view_activity).setOnClickListener(this);
+        findViewById(R.id.btn_audio_activity).setOnClickListener(this);
+        findViewById(R.id.btn_audio_test_activity).setOnClickListener(this);
     }
 
     /**
@@ -52,6 +56,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btn_custom_view_activity:
                 intent.setClass(this, CustomViewActivity.class);
+                break;
+            case R.id.btn_audio_activity:
+                intent.setClass(this, AudioActivity.class);
+                break;
+            case R.id.btn_audio_test_activity:
+                intent.setClass(this, AudioTestActivity.class);
                 break;
         }
         startActivity(intent);

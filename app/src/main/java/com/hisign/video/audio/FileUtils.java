@@ -22,7 +22,7 @@ class FileUtils {
     /**
      *原始文件
      */
-    private static final String AUDIO_PCM_BASEPATH = ConstPath.PROJECT_ROOT_PATH+rootPath+ "/pcm/";
+    public static final String AUDIO_PCM_BASEPATH = ConstPath.PROJECT_ROOT_PATH+rootPath+ "/pcm/";
 
     /**
      *可播放的高质量音频文件
