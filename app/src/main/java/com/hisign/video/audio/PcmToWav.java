@@ -60,14 +60,14 @@ class PcmToWav {
         waveHeader.avgBytesPerSec = waveHeader.blockAlign*waveHeader.samplesPerSec;
         waveHeader.dataHdrLength = TOTAL_SIZE;
 
-        byte[] bytes = null;
+        byte[] header = null;
         try {
-            bytes = waveHeader.getHeader();
+            header = waveHeader.getHeader();
         } catch (IOException e) {
             Log.e(TAG,e.getMessage());
             return false;
         }
-        if (bytes.length != 44){
+        if (header.length != 44){
             //WAV标准,头部应该是44字节,如果不是44字节则不进行转换文件
             return false;
         }
@@ -83,7 +83,7 @@ class PcmToWav {
         OutputStream outputStream = null;
         try {
             outputStream = new BufferedOutputStream(new FileOutputStream(destinationPath));
-            outputStream.write(bytes,0,bytes.length);
+            outputStream.write(header,0,header.length);
             for (int j = 0;j<fileNum;j++){
                 inStream = new BufferedInputStream(new FileInputStream(files[j]));
                 int size = inStream.read(buffer);

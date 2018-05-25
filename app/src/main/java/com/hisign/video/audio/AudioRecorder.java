@@ -153,11 +153,12 @@ public class AudioRecorder {
 
     /**
      * 将声音写入文件
+     * 没明白为什么回事沙沙的声音
      * @param listener 音频流监听
      */
     private void writeVoiceToFile(RecordStreamListener listener) {
         //byte数组存储一些字节数据,大小为缓冲区大小
-        byte[] audioData = new byte[bufferSizeInBytes];
+        short[] audioData = new short[bufferSizeInBytes];
         FileOutputStream fos = null;
         int readSize = 0;
         StringBuilder  currentFileName = new StringBuilder(filename);
@@ -188,10 +189,13 @@ public class AudioRecorder {
             if (AudioRecord.ERROR_INVALID_OPERATION != readSize && fos != null){
                 Log.i(TAG,"audio is writing");
                 try {
-                    fos.write(audioData);
-                    if (listener != null){
-                        listener.recordOfByte(audioData,0,audioData.length);
+//                    fos.write(audioData);
+                    for (int i = 0;i<readSize;i++){
+                        fos.write(audioData[i]);
                     }
+//                    if (listener != null){
+//                        listener.recordOfByte(audioData,0,audioData.length);
+//                    }
                 } catch (IOException e) {
                     Log.e(TAG,e.getMessage());
                 }
@@ -360,7 +364,7 @@ public class AudioRecorder {
                     AudioFormat.CHANNEL_IN_STEREO,AudioFormat.ENCODING_PCM_16BIT,
                     bufferSize,AudioTrack.MODE_STREAM);
             try {
-                dis = new DataInputStream(new BufferedInputStream(new FileInputStream(FileUtils.AUDIO_PCM_BASEPATH+filesName.get(0)+".pcm")));
+                dis = new DataInputStream(new BufferedInputStream(new FileInputStream(FileUtils.AUDIO_PCM_BASEPATH+filesName.get(filesName.size()-1)+".pcm")));
                 audioTrack.play();//开始播放
                 //由于AudioTrack播放的是流,所以,我们需要一边播放一边读取
                 while(mAudioPlaying && dis.available() > 0){
