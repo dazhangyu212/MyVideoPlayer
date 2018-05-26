@@ -31,6 +31,8 @@
         <activity android:name=".audio.AudioActivity"/>
         <activity android:name=".audio.AudioListActivity"/>
         <activity android:name=".audio.AudioTestActivity"/>
+        <activity android:name=".cameraapi.SurfaceViewActivity"/>
+        <activity android:name=".cameraapi.TextureViewActivity"/>
     </application>
 
 </manifest>
