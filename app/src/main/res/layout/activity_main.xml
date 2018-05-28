@@ -22,25 +22,34 @@
             android:orientation="vertical"
             >
             <Button
-                android:id="@+id/btn_imageview_activity"
+                android:id="@+id/btn_media_player_activity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
-                android:text="ImageView shows bitmap"
-                />
+                android:text="media player activity"/>
+
             <Button
-                android:id="@+id/btn_surfaceview_activity"
+                android:id="@+id/btn_texture_activity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
-                android:text="SurfaceView shows bitmap"
+                android:text="camera textureView"
                 />
+
             <Button
-                android:id="@+id/btn_custom_view_activity"
+                android:id="@+id/btn_camera_surfaceview_activity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
-                android:text="CustomView shows bitmap"
+                android:text="camera surfaceView"
+                />
+
+            <Button
+                android:id="@+id/btn_audio_test_activity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="audio test instance"
                 />
             <Button
                 android:id="@+id/btn_audio_activity"
@@ -50,26 +59,27 @@
                 android:text="audio instance"
                 />
             <Button
-                android:id="@+id/btn_audio_test_activity"
+                android:id="@+id/btn_custom_view_activity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
-                android:text="audio test instance"
+                android:text="CustomView shows bitmap"
                 />
             <Button
-                android:id="@+id/btn_camera_surfaceview_activity"
+                android:id="@+id/btn_surfaceview_activity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
-                android:text="camera surfaceView"
+                android:text="SurfaceView shows bitmap"
                 />
             <Button
-                android:id="@+id/btn_texture_activity"
+                android:id="@+id/btn_imageview_activity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
-                android:text="camera textureView"
+                android:text="ImageView shows bitmap"
                 />
+
         </LinearLayout>
     </ScrollView>
 

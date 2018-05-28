@@ -33,6 +33,7 @@
         <activity android:name=".audio.AudioTestActivity"/>
         <activity android:name=".cameraapi.SurfaceViewActivity"/>
         <activity android:name=".cameraapi.TextureViewActivity"/>
+        <activity android:name=".mediaapi.MediaPlayerActivity"/>
     </application>
 
 </manifest>

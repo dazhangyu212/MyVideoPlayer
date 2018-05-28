@@ -24,4 +24,9 @@ public class ConstPath {
      * 此文件如果存在,就开启被捕获异常的日志输出
      */
     public static String CAUGHT_EXCEPTION_FILE = PROJECT_ROOT_PATH + "LogForCaughtException/";
+
+    /**
+     * 存放MP4等视频文件
+     */
+    public static final String VIDEO_DIRECTORY_PATH = PROJECT_ROOT_PATH+"video/";
 }
