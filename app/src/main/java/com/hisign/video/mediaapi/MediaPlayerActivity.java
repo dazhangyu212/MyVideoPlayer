@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * 描述：
+ * 描述：MediaExtractor和MediaCodec播放视频的使用
  * 公司：北京海鑫科金高科技股份有限公司
  * 作者：zhangyu
  * 创建时间 2018/5/28
