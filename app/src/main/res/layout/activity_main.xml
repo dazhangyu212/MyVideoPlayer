@@ -22,6 +22,12 @@
             android:orientation="vertical"
             >
             <Button
+                android:id="@+id/btn_mediaxuser_activity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="media player activity"/>
+            <Button
                 android:id="@+id/btn_media_player_activity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

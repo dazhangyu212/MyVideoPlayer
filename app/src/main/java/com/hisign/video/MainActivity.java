@@ -13,6 +13,7 @@ import com.hisign.video.drawimage.CustomViewActivity;
 import com.hisign.video.drawimage.ImageViewActivity;
 import com.hisign.video.drawimage.SurfaceViewActivity;
 import com.hisign.video.mediaapi.MediaPlayerActivity;
+import com.hisign.video.mediamuser.MediaMuxerActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.btn_camera_surfaceview_activity).setOnClickListener(this);
         findViewById(R.id.btn_texture_activity).setOnClickListener(this);
         findViewById(R.id.btn_media_player_activity).setOnClickListener(this);
+        findViewById(R.id.btn_mediaxuser_activity).setOnClickListener(this);
     }
 
     /**
@@ -76,6 +78,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btn_media_player_activity:
                 intent.setClass(this, MediaPlayerActivity.class);
+                break;
+            case R.id.btn_mediaxuser_activity:
+                intent.setClass(this, MediaMuxerActivity.class);
                 break;
         }
         startActivity(intent);
