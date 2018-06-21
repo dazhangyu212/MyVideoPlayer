@@ -42,7 +42,7 @@ public class MediaMuxerActivity extends AppCompatActivity implements Camera.Prev
         fltContainer = findViewById(R.id.flt_container);
         cameraView = new CameraView(this);
         int[] screenXY = getScreenWidthAndHeight();
-        cameraView.getPreviewSize(screenXY);
+        final Camera.Size previewSize = cameraView.getPreviewSize(screenXY);
         fltContainer.addView(cameraView);
         cameraView.setiSurfaceCallBack(this);
         btnControl = findViewById(R.id.btn_control);
@@ -58,7 +58,8 @@ public class MediaMuxerActivity extends AppCompatActivity implements Camera.Prev
                     startCamera();
                     view.setTag("stop");
                     ((TextView) view).setText("停止");
-                    MediaMuxerThread.startMuxer();
+                    Camera.Size picSize = cameraView.getPicutreSize();
+                    MediaMuxerThread.startMuxer(previewSize.width,previewSize.height,picSize.width,picSize.height);
                 }
             }
         });

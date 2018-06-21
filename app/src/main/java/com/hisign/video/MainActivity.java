@@ -14,6 +14,8 @@ import com.hisign.video.drawimage.ImageViewActivity;
 import com.hisign.video.drawimage.SurfaceViewActivity;
 import com.hisign.video.mediaapi.MediaPlayerActivity;
 import com.hisign.video.mediamuser.MediaMuxerActivity;
+import com.hisign.video.mediamuser.TestMuxerActivity;
+import com.hisign.video.opengl.OpenGLES20Activity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -43,6 +45,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.btn_texture_activity).setOnClickListener(this);
         findViewById(R.id.btn_media_player_activity).setOnClickListener(this);
         findViewById(R.id.btn_mediaxuser_activity).setOnClickListener(this);
+        findViewById(R.id.btn_others_mediaxuser_activity).setOnClickListener(this);
+        findViewById(R.id.btn_test_muxer_activity).setOnClickListener(this);
+        findViewById(R.id.btn_opengl).setOnClickListener(this);
     }
 
     /**
@@ -81,6 +86,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btn_mediaxuser_activity:
                 intent.setClass(this, MediaMuxerActivity.class);
+                break;
+            case  R.id.btn_others_mediaxuser_activity:
+                intent.setClass(this, com.hisign.video.ori_muxer.MediaMuxerActivity.class);
+                break;
+            case  R.id.btn_test_muxer_activity:
+                intent.setClass(this, TestMuxerActivity.class);
+                break;
+            case R.id.btn_opengl:
+                intent.setClass(this, OpenGLES20Activity.class);
                 break;
         }
         startActivity(intent);

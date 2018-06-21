@@ -26,6 +26,8 @@ public class MediaMuxerThread extends Thread{
 
     public static final int TRACK_VIDEO = 0;
     public static final int TRACK_AUDIO = 1;
+    private static int photoWidth;
+    private static int photoHeight;
 
     private final Object lock = new Object();
 
@@ -39,6 +41,14 @@ public class MediaMuxerThread extends Thread{
 
     private int videoTrackIndex = -1;
     private int audioTrackIndex = -1;
+    /**
+     * 视频宽
+     */
+    private static int videoWidth;
+    /**
+     * 视频高
+     */
+    private static int videoHeight;
 
     private FileUtils fileSwapHelper;
     /**
@@ -56,7 +66,7 @@ public class MediaMuxerThread extends Thread{
     /**
      * 开始音视频混合任务
      */
-    public static void startMuxer(){
+    public static void startMuxer(int width,int height,int picWidth,int picHeight){
         if (mediaMuxerThread == null){
             synchronized (MediaMuxerThread.class){
                 if (mediaMuxerThread == null ){
@@ -66,6 +76,10 @@ public class MediaMuxerThread extends Thread{
                 }
             }
         }
+        videoWidth = width;
+        videoHeight = height;
+        photoWidth = picWidth;
+        photoHeight = picHeight;
     }
 
     /**
@@ -205,7 +219,7 @@ public class MediaMuxerThread extends Thread{
         muxerDatas = new Vector<>();
         fileSwapHelper = new FileUtils();
         audioThread = new AudioEncodeThread((new WeakReference<MediaMuxerThread>(this)));
-        videoThread = new VideoEncoderThread(1920,1080,new WeakReference<MediaMuxerThread>(this));
+        videoThread = new VideoEncoderThread(videoWidth,videoHeight,photoWidth,photoHeight,new WeakReference<MediaMuxerThread>(this));
         audioThread.start();
         videoThread.start();
         try {

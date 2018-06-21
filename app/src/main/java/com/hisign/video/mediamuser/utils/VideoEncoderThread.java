@@ -20,8 +20,8 @@ import java.util.Vector;
 
 class VideoEncoderThread extends Thread{
 
-    public static final int IMAGE_HEIGHT = 1080;
-    public static final int IMAGE_WIDTH = 1920;
+    public static int IMAGE_HEIGHT = 1080;
+    public static int IMAGE_WIDTH = 1920;
 
     private static final String TAG = "MediaXuser-Video";
     /**
@@ -62,7 +62,7 @@ class VideoEncoderThread extends Thread{
     /**
      * bit rate CameraWrapper.
      */
-    private static final int BIT_RATE = IMAGE_HEIGHT*IMAGE_WIDTH * 3 * 8 * FRAME_RATE / COMPRESS_RATIO;
+    private static int BIT_RATE = 0;
 
     private final Object lock = new Object();
 
@@ -91,9 +91,12 @@ class VideoEncoderThread extends Thread{
     private volatile boolean isMuxerReady = false;
 
 
-    public VideoEncoderThread(int mWidth, int mHeight, WeakReference<MediaMuxerThread> mediaMuxers) {
+    public VideoEncoderThread(int videoWidth, int videoHeight, int mWidth, int mHeight, WeakReference<MediaMuxerThread> mediaMuxers) {
         this.mWidth = mWidth;
         this.mHeight = mHeight;
+        IMAGE_WIDTH = mWidth;
+        IMAGE_HEIGHT = mHeight;
+        BIT_RATE = IMAGE_HEIGHT*IMAGE_WIDTH * 3 * 8 * FRAME_RATE / COMPRESS_RATIO;
         this.mediaMuxers = mediaMuxers;
         frameBytes = new Vector<>();
         prepare();

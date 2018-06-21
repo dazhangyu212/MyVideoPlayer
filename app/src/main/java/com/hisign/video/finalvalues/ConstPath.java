@@ -29,4 +29,9 @@ public class ConstPath {
      * 存放MP4等视频文件
      */
     public static final String VIDEO_DIRECTORY_PATH = PROJECT_ROOT_PATH+"video/";
+
+    /**
+     *
+     */
+    public static final String AUDIO_DIRECTORY_PATH = PROJECT_ROOT_PATH+"audio/";
 }

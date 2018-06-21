@@ -10,7 +10,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        ndk{
+        ndk {
             // 生成.so库的目标平台
             abiFilters "armeabi"
         }
@@ -19,7 +19,7 @@ android {
                 cppFlags ""
                 // 指定只用clang编译器
                 // Clang是一个C语言、Objective-C、C++语言的轻量级编译器。
-                arguments "-DANDROID_TOOLCHAIN=clang",'-DANDROID_STL=gnustl_static'
+                arguments "-DANDROID_TOOLCHAIN=clang", '-DANDROID_STL=gnustl_static'
 
 
             }
@@ -38,7 +38,12 @@ android {
     }
     configurations.all { resolutionStrategy.force 'com.android.support:support-annotations:26.1.0' }
 
-    sourceSets { main { jni.srcDirs = ['src/main/jniLibs/'] } }
+    sourceSets {
+        main {
+            jni.srcDirs = ['src/main/jniLibs/']
+            assets.srcDirs = ['src/main/assets', 'src/main/assets/']
+        }
+    }
 }
 
 dependencies {

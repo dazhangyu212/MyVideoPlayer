@@ -293,10 +293,26 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback, O
         }
         return picutreSize;
     }
-    
+
+    public Size getPicutreSize() {
+        return picutreSize;
+    }
+
+    /**
+     * 屏幕的宽高是按照竖屏获取，而获得支持的尺寸是按照横屏来说的，
+     * @param screenXY 屏幕宽高
+     * @return
+     */
     public Size getPreviewSize(int[] screenXY) {
         parameters = getCamera().getParameters();
-        double targetRatio = (double) screenXY[0]/(double) screenXY[1];
+        boolean landScope = true;
+        double targetRatio = 0;
+        if (screenXY[0]<screenXY[1]){
+            landScope = false;
+            targetRatio = (double) screenXY[0]/(double) screenXY[1];
+        }else {
+            targetRatio = (double) screenXY[1]/(double) screenXY[0];
+        }
         List<Size> previewSizesList = parameters.getSupportedPreviewSizes();
         if (previewSizesList != null && previewSizesList.size() > 0) {
             Iterator<Size> it = previewSizesList.iterator();
@@ -305,12 +321,17 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback, O
                 Size size = it.next();
                 float ratio = (float) size.height / (float) size.width;
                 if (Math.abs(ratio - targetRatio) > 0.1) continue;
-
-                if (Math.abs(size.height - screenXY[1]) < minDiff) {
+                int diff = 0;
+                if (!landScope){
+                    diff = Math.abs(size.height - screenXY[0]);
+                }else {
+                    diff = Math.abs(size.height - screenXY[1]);
+                }
+                if (diff < minDiff) {
                     maxPreviewSizeHeight = size.height;
                     maxPreviewSizeWidth = size.width;
                     previewSize = size;
-                    minDiff = Math.abs(size.height - screenXY[1]);
+                    minDiff = diff;
                 }
             }
         }

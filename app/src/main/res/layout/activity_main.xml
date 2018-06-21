@@ -22,11 +22,29 @@
             android:orientation="vertical"
             >
             <Button
+                android:id="@+id/btn_opengl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="opengl activity"/>
+            <Button
+                android:id="@+id/btn_test_muxer_activity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="test muxer activity"/>
+            <Button
+                android:id="@+id/btn_others_mediaxuser_activity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="others media muxer activity"/>
+            <Button
                 android:id="@+id/btn_mediaxuser_activity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
-                android:text="media player activity"/>
+                android:text="my own media muxer activity"/>
             <Button
                 android:id="@+id/btn_media_player_activity"
                 android:layout_width="wrap_content"

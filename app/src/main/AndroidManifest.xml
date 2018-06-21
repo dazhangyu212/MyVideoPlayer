@@ -2,6 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.hisign.video">
 
+    <!--为了让你的应用程序能够使用OpenGL ES 2.0的API，你必须添加以下声明到manifest：-->
+    <uses-feature android:glEsVersion="0x00020000" android:required="true" />
+    <!--如果你的应用程序需要使用纹理压缩，你还需要声明你的应用程序需要支持哪种压缩格式，以便他们安装在兼容的设备上。-->
+    <supports-gl-texture android:name="GL_OES_compressed_ETC1_RGB8_texture" />
+    <supports-gl-texture android:name="GL_OES_compressed_paletted_texture" />
+
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -35,6 +41,9 @@
         <activity android:name=".cameraapi.TextureViewActivity"/>
         <activity android:name=".mediaapi.MediaPlayerActivity"/>
         <activity android:name=".mediamuser.MediaMuxerActivity"/>
+        <activity android:name=".ori_muxer.MediaMuxerActivity"/>
+        <activity android:name=".mediamuser.TestMuxerActivity"/>
+        <activity android:name=".opengl.OpenGLES20Activity"/>
     </application>
 
 </manifest>
