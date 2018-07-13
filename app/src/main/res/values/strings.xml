@@ -3,4 +3,7 @@
     <string name="str_continue_record">继续录音</string>
     <string name="str_pause_record">暂停录音</string>
     <string name="str_play_pcm">播放一段PCM</string>
+    <string name="border_top">border_top</string>
+    <string name="border_bottom">border_bottom</string>
+    <string name="image_url">image_url</string>
 </resources>

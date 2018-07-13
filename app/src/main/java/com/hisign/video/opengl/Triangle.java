@@ -1,10 +1,14 @@
 package com.hisign.video.opengl;
 
 import android.opengl.GLES20;
+import android.opengl.GLSurfaceView;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+
+import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.opengles.GL10;
 
 /**
  * 描述：
@@ -71,5 +75,26 @@ public class Triangle {
 
         // creates OpenGL ES program executables
         GLES20.glLinkProgram(mProgram);
+    }
+
+    private static class MyGLRenderer implements GLSurfaceView.Renderer{
+        @Override
+        public void onSurfaceCreated(GL10 gl10, EGLConfig eglConfig) {
+
+        }
+
+        @Override
+        public void onSurfaceChanged(GL10 gl10, int i, int i1) {
+
+        }
+
+        @Override
+        public void onDrawFrame(GL10 gl10) {
+
+        }
+
+        public static int loadShader(int glFragmentShader, String fragmentShaderCode) {
+            return 0;
+        }
     }
 }
